@@ -6,12 +6,8 @@ interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
 
-	console.log('Modele');
-
-	const queryClient = new QueryClient();
-
 	return (
-		<QueryClientProvider client={queryClient}><div>page</div></QueryClientProvider>
+		<div>model</div>
   )
 }
 
