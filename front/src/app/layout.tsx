@@ -1,6 +1,7 @@
-import NavbarA from './(component)/navbar_auth/navbar_A'
-import './globals.css'
-import { Inter } from 'next/font/google'
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import NavbarA from './(component)/navbar_auth/navbar_A';
+import './globals.css';
+import { Inter } from 'next/font/google';
 
 const inter = Inter({ subsets: ['latin'] })
 

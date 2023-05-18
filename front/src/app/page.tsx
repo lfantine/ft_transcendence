@@ -1,6 +1,9 @@
 import Image from 'next/image'
 import styles from './page.module.css'
 import NavbarA from './(component)/navbar_auth/navbar_A';
+import { resolve } from 'path';
+import { useQuery } from '@tanstack/react-query';
+import { title } from 'process';
 
 export default function Home() {
   return (
