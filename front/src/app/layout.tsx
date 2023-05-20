@@ -1,7 +1,7 @@
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import NavbarA from './(component)/navbar_auth/navbar_A';
 import './globals.css';
 import { Inter } from 'next/font/google';
+import QueryProvider from './(component)/queryProvider';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,9 +17,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        {children}
-      </body>
+      <QueryProvider>
+          <body>
+            {children}
+          </body>
+      </QueryProvider>
     </html>
   )
 }
