@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <QueryProvider>
-          <body>
+          <body className='body'>
             {children}
           </body>
       </QueryProvider>

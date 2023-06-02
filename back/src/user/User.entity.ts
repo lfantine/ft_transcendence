@@ -8,6 +8,9 @@ class User {
 	@Column("text", {unique: true})
 	mail: string;
 
+	@Column("text")
+	username: string;
+
 	@Column()
 	password: string;
 }

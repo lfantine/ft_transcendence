@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable, Req } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Request, Response } from "express";
+import { log } from "console";
 
 @Injectable()
 export class MyAuthGuard implements CanActivate {
@@ -10,9 +11,16 @@ export class MyAuthGuard implements CanActivate {
 	async canActivate(
 		context: ExecutionContext,
 	  ): Promise<boolean> {
-		const request = context.switchToHttp().getRequest();
-		const user = await this.authService.myValidate(request);
-		request.user = user;
-		return true;
+		try {
+			const request = context.switchToHttp().getRequest();
+			const user = await this.authService.myValidate(request);
+			if (user === '1' || user === '2')
+			{
+				request.err = user;
+				return true;
+			}
+			request.user = user;
+			return true;
+		} catch (e) { return false;}
 	}
 }

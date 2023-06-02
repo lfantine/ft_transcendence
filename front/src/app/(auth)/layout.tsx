@@ -1,8 +1,13 @@
+'use client'
 import NavbarA from '../(component)/navbar_auth/navbar_A';
 import '../globals.css';
 import { Inter } from 'next/font/google';
 import styles from './choose.module.css';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { checkLogin } from '@/app/(utils)/isLogin';
+import { AuthResponse } from './auth.api';
+import { useEffect, useState } from 'react';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,6 +21,29 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode
 }) {
+
+	const { push } = useRouter();
+	const [childError, setchildError] = useState("child");
+
+	useEffect(() => {
+		const localData = localStorage.getItem('log');
+		if (localData === 'yes'){
+			push('/dashboard');
+			console.log('is already logged');
+			return ;
+		}
+		const userData = checkLogin();
+		userData.then(function(data: AuthResponse | undefined) {
+			if (data !== undefined){
+				localStorage.setItem('log', 'yes');
+				push('/dashboard');
+				console.log('is already logged');
+			}
+			else
+				localStorage.setItem('log', 'no');
+		})
+	}, [])
+
   return (
 	<main>
 		<NavbarA navActive={true} testing={true}/>
@@ -25,7 +53,8 @@ export default function AuthLayout({
 				/
 				<div className={styles.select_C}><Link className={styles.link} href="/register" rel='register'>REGISTER</Link></div>
 			</div>
-			<div className={styles.child}>
+			<div className={styles.child} id='panel'>
+				
 				{children}
 			</div>
 		</div>

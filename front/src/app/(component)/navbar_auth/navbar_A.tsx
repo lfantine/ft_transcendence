@@ -7,9 +7,6 @@ export interface INavbar {
 }
 
 const NavbarA: React.FC<INavbar> = (Content) => {
-
-	console.log(Content);
-
 	return (
 		<div className='navbar'>
 			<div className='nav_C one'><Link className='link' href="" rel='acceuil'>ACCUEIL</Link></div>

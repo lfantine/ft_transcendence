@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Res } from '@nestjs/common';
+import { Response } from 'express';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'lfantine is great ! lfantine is good !';
+  getHello(@Res() response: Response): string {
+    response.send("nul");
+    return "nul";
   }
 }

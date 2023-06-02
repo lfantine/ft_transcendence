@@ -18,20 +18,21 @@ export class AuthService {
 		private userService: UserService,
 		private jwtService: JwtService,
 		private configService: ConfigService
-		) {}
+	) {}
 
-	async register({mail, password}:CreateUserDto) {
+	async register({mail, password, username}:CreateUserDto) {
 
 		// here could be the validate email step before reister 
 
 		try{
 			const hashedPassword = await bcrypt.hash(password, 12);
-			const user = await this.userService.createUser({mail, password: hashedPassword});
+			const user = await this.userService.createUser({mail, username, password: hashedPassword});
 			user.password = undefined;
 			return user;
 		} catch (e) {
 			if (e?.code === PostgresErrorCodes.UniqueViolation){
-				throw new HttpException('Email already taken !', HttpStatus.BAD_REQUEST);
+				// throw new HttpException('Email already taken !', HttpStatus.CONFLICT);
+				return '1';
 			}
 		}
 		throw new HttpException('Something went wrong !', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -62,19 +63,42 @@ export class AuthService {
 	}
 	
 	async myValidate(@Req() request: Request){
-		const {mail , password, confirmPassword}  = request.body;
-		if (password != confirmPassword)
-			throw new HttpException('password and confirme do not match !', HttpStatus.BAD_REQUEST);
-		const user = await this.userService.findByMail(mail);
-		await this.comparePassword(password, user.password);
-		user.password = undefined;
-		return user;
+		const {mail , password}  = request.body;
+		try {
+			const user = await this.userService.findByMail(mail);
+			const err = await this.comparePassword(password, user.password);
+			if (err != 0)
+				return err;
+			user.password = undefined;
+			return user;
+		} catch (e)
+		{
+			return '1';
+		}
 	}
-
+	
 	async comparePassword(password: string, hashedPassword: string){
 		const passMatching = await bcrypt.compare(password, hashedPassword);
 		if (!passMatching){
-			throw new HttpException('bad password !', HttpStatus.BAD_REQUEST);
+			// throw new HttpException('bad password !', HttpStatus.BAD_REQUEST);
+			return '2';
 		}
+		return 0;
+	}
+
+	async ValidateIsLog(@Req() request: Request){
+		try {
+            const { user } = this.jwtService.verify(request?.cookies?.Authentification, this.configService.get('JWT_SECRET'));
+			user.password = undefined;
+			console.log(user);
+			return user;
+        } catch (error) {
+			return undefined;
+        }
+	}
+
+ 	getCookieForLogout()
+	{
+		return 'Authentification=; HttpOnly; Path=/; Max-Age=0;';
 	}
 }

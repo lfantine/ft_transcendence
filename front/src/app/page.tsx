@@ -1,12 +1,17 @@
 'use client'
 
 import Image from 'next/image'
-import styles from './page.module.css'
+import * as styles from './page.module.css'
 import NavbarA from './(component)/navbar_auth/navbar_A';
 import { resolve } from 'path';
 import { useQuery } from '@tanstack/react-query';
 import { title } from 'process';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
+import Api from './api/api';
+import { useRouter } from 'next/navigation';
+import { checkLogin } from './(utils)/isLogin';
+import { AuthResponse } from './(auth)/auth.api';
 
 interface Data {
   userId: number
@@ -14,12 +19,26 @@ interface Data {
 
 export default function Home() {
 
-  const { data, isLoading, isError } = useQuery({
-    queryFn: async () => {
-      const {data} = await axios.get('http://localhost:4000');
-      return data as string;
-    }
-  })
+  const { push } = useRouter();
+
+  useEffect(() => {
+		const localData = localStorage.getItem('log');
+		if (localData === 'yes'){
+			push('/dashboard');
+			console.log('is already logged');
+			return ;
+		}
+		const userData = checkLogin();
+		userData.then(function(data: AuthResponse | undefined) {
+			if (data !== undefined){
+				localStorage.setItem('log', 'yes');
+				push('/dashboard');
+				console.log('is already logged');
+			}
+			else
+				localStorage.setItem('log', 'no');
+		})
+	}, [])
 
   return (
     <main>
@@ -30,7 +49,7 @@ export default function Home() {
         <div className='photo'>
           <img className='game_img' src='/img_acceuil_game.jpg' alt='game_img'/>
         </div>
-        <h2>{isLoading ? 'loading' : isError ? 'Error' : 'salut'}</h2>
+        <h2>NONE</h2>
       </section>
     </main>
   );
