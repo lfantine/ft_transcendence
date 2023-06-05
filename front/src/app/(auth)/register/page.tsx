@@ -7,7 +7,6 @@ import * as Joi from 'joi';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { RegisterFormInput, register_ } from '../auth.api';
-import { sleep } from '../login/page';
 
 interface pageProps {}
 
@@ -33,64 +32,23 @@ const valideForm = Joi.object({
 
 const page: FC<pageProps> = ({}) => {
 
-	const { register, handleSubmit, formState: { errors } } = useForm<rFormInterface>();
 	const { push } = useRouter();
-
-	const registerMutation = useMutation(register_, {
-		onSuccess: async (data) => {
-			if (data === 1)
-			{
-				const p = document.getElementById('panel');
-				if (p === null)
-					return console.log('Email already taken !');
-				console.log('Email already taken');
-				p.style.backgroundColor ='#9A3A3A';
-				await sleep(200);
-				p.style.backgroundColor ='#5A5A5A';
-				await sleep(200);
-				p.style.backgroundColor ='#9A3A3A';
-				await sleep(200);
-				p.style.backgroundColor ='#5A5A5A';
-				await sleep(200);
-				p.style.backgroundColor ='#9A3A3A';
-				await sleep(200);
-				p.style.backgroundColor ='#5A5A5A';
-				return ;
-			}
-			if (data === 2)
-			{
-				return console.log('to confirm password you must enter the same password 2 times !');
-			}
-			console.log('registered !');
-			push('/login');
-		},
-		onError: (error) => {
-			console.log('Internal error !');
-		}
-	});
+	const { register, handleSubmit } = useForm<rFormInterface>();
 
 	const onSubmit: SubmitHandler<rFormInterface> = data => {
-		const value = valideForm.validate(data);
-		if (value.error)
-		{
-			console.log(value.error);
-		}
-		else
-		{
-			registerMutation.mutate(data);
-		}
+		console.log(data);
 	}
 
 	return (
-		<main>
-		<div className={styles.categ}>register :</div>
-		<div className={styles.form_}>
+	<main>
+		<div className={styles.title}>Register</div>
+		<div className={styles.form}>
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<label className={styles.i_C}>email : <input type='mail' placeholder='username@gmail.com' {...register("mail")}></input></label>
-				<label className={styles.i_C}>username : <input type='text' placeholder='narty' {...register("username")}></input></label>
-				<label className={styles.i_C}>mot de passe : <input type='password' placeholder='your mdp' {...register("password")}></input></label>
-				<label className={styles.i_C}>confirm mot de passe : <input type='password' placeholder='your mdp' {...register("confirmPassword")}></input></label>
-				<label className={styles.s_C}><input type='SUBMIT' value="SUBMIT" readOnly></input></label>
+				<label className={styles.inp}>Enter your mail : <input type='mail' placeholder='username@gmail.com' {...register("mail")} className={styles.input}></input></label>
+				<label className={styles.inp}>Enter your username : <input type='text' placeholder='azerty' {...register("username")} className={styles.input}></input></label>
+				<label className={styles.inp}>Enter your password : <input type='password' placeholder='*****' {...register("password")} className={styles.input}></input></label>
+				<label className={styles.inp}>Confirm your password : <input type='password' placeholder='*****' {...register("confirmPassword")} className={styles.input}></input></label>
+				<input type='submit' value="register" className={styles.sub} readOnly></input>
 			</form>
 		</div>
 	</main>

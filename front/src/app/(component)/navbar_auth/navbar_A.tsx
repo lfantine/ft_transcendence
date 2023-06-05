@@ -42,15 +42,16 @@ const handleMusic = async (e: any) => {
 	await sleep(10);
 	const el = document.getElementById('music');
 	const o = document.getElementById('odio');
+	const aud = o as HTMLAudioElement;
 	if (!activeMusic)
 	{
 		el?.classList.add(styles['tourne']);
-		o.play();
+		aud.play();
 	}
 	else
 	{
 		el?.classList.remove(styles['tourne']);
-		o.pause();
+		aud.pause();
 	}
 }
 
@@ -58,9 +59,11 @@ const handleMusic = async (e: any) => {
 		<main>
 			<div className={styles.bar}>
 				<img src='lanterne.png' className={styles.lant} onClick={handleNav}></img>
-				<div className={styles.band} id='nav'>
-					<div className={styles.link}><Link href="" className={styles.L}>HOME</Link></div>
-					<div className={styles.link}><Link href="/login" className={styles.L}>CONNECTION</Link></div>
+				<div className={styles.cont_band}>
+					<div className={styles.band} id='nav'>
+						<div className={styles.link}><Link href="" className={styles.L}>HOME</Link></div>
+						<div className={styles.link}><Link href="/login" className={styles.L}>CONNECTION</Link></div>
+					</div>
 				</div>
 				<div className={styles.music} onClick={handleMusic}><img src='vinil.png' className={styles.vinil} id='music'></img><audio src='vinil_music.mp3' id='odio'></audio></div>
 			</div>

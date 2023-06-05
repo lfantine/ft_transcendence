@@ -21,25 +21,6 @@ export default function Home() {
 
   const { push } = useRouter();
 
-//   useEffect(() => {
-// 		const localData = localStorage.getItem('log');
-// 		if (localData === 'yes'){
-// 			push('/dashboard');
-// 			console.log('is already logged');
-// 			return ;
-// 		}
-// 		const userData = checkLogin();
-// 		userData.then(function(data: AuthResponse | undefined) {
-// 			if (data !== undefined){
-// 				localStorage.setItem('log', 'yes');
-// 				push('/dashboard');
-// 				console.log('is already logged');
-// 			}
-// 			else
-// 				localStorage.setItem('log', 'no');
-// 		})
-// 	}, [])
-
   return (
     <main>
       <NavbarA navActive={true} testing={true}/>

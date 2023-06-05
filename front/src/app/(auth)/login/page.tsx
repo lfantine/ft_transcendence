@@ -9,12 +9,9 @@ import * as Joi from 'joi';
 import { useRouter } from 'next/navigation';
 import { checkLogin } from '@/app/(utils)/isLogin';
 import { error } from 'console';
-import AuthError from '@/app/(component)/auth_error/authError';
 
 
 interface loginProps {}
-
-export const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
 export type FormInterface = {
 	mail: string;
@@ -31,60 +28,30 @@ const valideForm = Joi.object({
 const page: FC<loginProps> = ({}) => {
 
 	const { push } = useRouter();
-	const [badPassError, setbadPassError] = useState(false);
-	const [badMailError, setbadMailError] = useState(false);
-
-	const loginMutation = useMutation(login, {
-		onSuccess: async (data) => {
-			if (data === -1){
-				return console.log('Internal error !');
-			}
-			if (data === 1){
-				setbadMailError(true);
-				console.log('Bad email !');
-				await sleep(3000);
-				return setbadMailError(false);
-			}
-			if (data === 2){
-				setbadPassError(true);
-				console.log('Bad password !');
-				await sleep(3000);
-				return setbadPassError(false);
-			}
-			console.log('Logged in !');
-			push('/dashboard');
-		},
-		onError: (error) => {
-			console.log('Internal error !');
-		}
-	});
-
 	const { register, handleSubmit } = useForm<FormInterface>();
 
 	const onSubmit: SubmitHandler<FormInterface> = data => {
-		const value = valideForm.validate(data);
-		if (value.error)
-		{
-			console.log(value.error);
-		}
-		else
-		{
-			loginMutation.mutate(data);
-		}
+		console.log(data);
+	}
+
+	const handleOauth = () => {
+		push('https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-25e6ea53637b7902c95484f73335e7c73358babe3f76497cf11e62f52efae667&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Foauth&response_type=code');
 	}
 
 	return (
 	<main>
-		<div className={styles.categ}>login :</div>
-		<div className={styles.form_}>
-			<form onSubmit={handleSubmit(onSubmit)}>
-				<label className={styles.i_C}>email : <input type='mail' placeholder='username@gmail.com' {...register("mail")}></input></label>
-				<label className={styles.i_C}>mot de passe : <input type='password' placeholder='your mdp' {...register("password")}></input></label>
-				<label className={styles.s_C}><input type='SUBMIT' value="SUBMIT" readOnly></input></label>
-			</form>
+		<div className={styles.title}>login with form</div>
+			<div className={styles.form}>
+				<form onSubmit={handleSubmit(onSubmit)}>
+					<label className={styles.inp}>Enter your mail : <input type='mail' placeholder='username@gmail.com' {...register("mail")} className={styles.input}></input></label>
+					<label className={styles.inp}>Enter your password : <input type='password' placeholder='*****' {...register("password")} className={styles.input}></input></label>
+					<input type='submit' value="login" className={styles.sub} readOnly></input>
+				</form>
+			</div>
+		<div className={styles.title}>login with other</div>
+		<div className={styles.cont_oAc}>
+			<div className={styles.oAc && styles.Oauth} onClick={handleOauth}>42 authorize</div>
 		</div>
-		<AuthError text='Bad Password' active={badPassError} hint='try an other password'/>
-		<AuthError text='No User with this email ...' active={badMailError} hint='try an other email'/>
 	</main>
   )
 }

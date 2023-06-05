@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { checkLogin } from '@/app/(utils)/isLogin';
 import { AuthResponse } from './auth.api';
 import { useEffect, useState } from 'react';
+import { relative } from 'path';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,38 +26,20 @@ export default function AuthLayout({
 	const { push } = useRouter();
 	const [childError, setchildError] = useState("child");
 
-	useEffect(() => {
-		const localData = localStorage.getItem('log');
-		if (localData === 'yes'){
-			push('/dashboard');
-			console.log('is already logged');
-			return ;
-		}
-		const userData = checkLogin();
-		userData.then(function(data: AuthResponse | undefined) {
-			if (data !== undefined){
-				localStorage.setItem('log', 'yes');
-				push('/dashboard');
-				console.log('is already logged');
-			}
-			else
-				localStorage.setItem('log', 'no');
-		})
-	}, [])
-
   return (
 	<main>
 		<NavbarA navActive={true} testing={true}/>
 		<div className={styles.choose}>
 			<div className={styles.selection}>
-				<div className={styles.select_C}><Link className={styles.link} href="/login" rel='login'>LOGIN</Link></div>
-				/
-				<div className={styles.select_C}><Link className={styles.link} href="/register" rel='register'>REGISTER</Link></div>
+				<img src='./parchem1.png' className={styles.parchemin}></img>
+				<div className={styles.select_C}><Link className={styles.link} href="/login" rel='login'><div>L</div><div>O</div><div>G</div><div>I</div><div>N</div></Link></div>
+				<div className={styles.select_C}><Link className={styles.link} href="/register" rel='register'><div>R</div><div>E</div><div>G</div><div>I</div><div>S</div><div>T</div><div>E</div><div>R</div></Link></div>
 			</div>
-			<div className={styles.child} id='panel'>
-				
-				{children}
-			</div>
+				<img src='./parchem2_.png' className={styles.parchem2}></img>
+				<div className={styles.child} id='panel'>
+					{children}
+				</div>
+			<div className={styles.balanced}></div>
 		</div>
 	</main>
   );
