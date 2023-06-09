@@ -8,6 +8,7 @@ import { AuthResponse, logout } from '../(auth)/auth.api';
 import { useRouter } from 'next/navigation';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { rFormInterface } from '../(auth)/register/page';
+import Api from '../api/api';
 
 interface pageProps {}
 
@@ -18,6 +19,7 @@ const page: FC<pageProps> = ({}) => {
 
 	const { register, handleSubmit, formState: { errors } } = useForm<logoutForm>();
 	const { push } = useRouter();
+	Api.init();
 
 	useEffect(() => {
 

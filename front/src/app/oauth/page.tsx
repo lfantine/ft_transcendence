@@ -2,41 +2,25 @@
 
 import axios, { AxiosInstance } from 'axios';
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'; // Mise à jour de l'importation
 import styles from './oauth.module.css';
 import url from 'url';
-import { useMutation } from '@tanstack/react-query';
-import { AuthResponse, login42 } from '../(auth)/auth.api';
 import Api from '../api/api';
+import { AuthResponse, Login42FormInput } from '../(auth)/auth.api'; // Mise à jour de l'importation
+import { useMutation } from '@tanstack/react-query';
 
 export async function Oauth() {
-	const { push } = useRouter();
-	Api.init();
-
-	const login42Mutation = useMutation(login42, {
-		onSuccess: async (data) => {
-			if (data === undefined || data === -1){
-				console.log('error while login with 4 user');
-				push('');
-				return ;
-			}
-			console.log('You are now logged in !');
-			localStorage.setItem('log', 'yes');
-			push('/dashboard');
-		},
-	});
+	const { push } = useRouter();	
 
 	useEffect(() => {
 		const takeToken = async () => {
 			const { query } = url.parse(window.location.href, true);
 			const code = query.code;	
-	
 			if (code){
-				const axiosI: AxiosInstance = axios.create({
-					baseURL: '',
-				});
 				try {
-					// login42Mutation.mutate({token: reponse.data.access_token, refresh_token: reponse.data.refresh_token});
+					const axiosI: AxiosInstance = axios.create({
+						baseURL: '',
+					});
 					console.log('attente de reponse');
 					const rep = await axiosI.post<AuthResponse | number>('http://localhost:4000/auth/42login', {code: code}, { withCredentials: true,});
 					console.log('reponse recu !');
@@ -66,11 +50,11 @@ export async function Oauth() {
 		takeToken();
 	}, []);
 
-  return (
-    <main>
-      <div className={styles.title}>Loading ...</div>
-    </main>
-  );
+	return (
+		<main>
+			<div className={styles.title}>Page is Loading</div>
+		</main>
+	);
 };
 
 export default Oauth;

@@ -4,7 +4,7 @@ import { FC, useEffect, useState } from 'react';
 import styles from './login.module.css';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
-import { AuthResponse, LoginFormInput, login } from '../auth.api';
+import { AuthResponse, Login42FormInput, LoginFormInput, login } from '../auth.api';
 import * as Joi from 'joi';
 import { useRouter } from 'next/navigation';
 import { checkLogin } from '@/app/(utils)/isLogin';
