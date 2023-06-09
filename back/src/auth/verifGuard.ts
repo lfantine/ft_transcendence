@@ -1,6 +1,8 @@
 import { CanActivate, ExecutionContext, Injectable, Req } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Request, Response } from "express";
+import User from "src/user/User.entity";
+import User42 from "src/user42/User42.entity";
 
 @Injectable()
 export class VerifGuard implements CanActivate {

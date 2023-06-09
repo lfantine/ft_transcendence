@@ -5,6 +5,11 @@ export interface LoginFormInput{
 	password: string;
 }
 
+export interface Login42FormInput{
+	token: string;
+	refresh_token: string;
+}
+
 export interface RegisterFormInput{
 	mail: string;
 	username: string;
@@ -14,7 +19,6 @@ export interface RegisterFormInput{
 
 export interface AuthResponse {
 	id: string;
-	mail: string;
 	username: string;
 }
 
@@ -28,6 +32,21 @@ export const login = async (formInput: LoginFormInput) => {
 		});
 		return data;
 	} catch (error: any) {
+		return -1;
+	}
+}
+
+export const login42 = async (formInput: Login42FormInput) => {
+	try {
+		console.log('En attente de reponse');
+		const { data } = await Api.post<AuthResponse | number, Login42FormInput>({
+			url: "/auth/42login",
+			data: formInput,
+		});
+		console.log('reponse a ete recupere');
+		return data;
+	} catch (e) {
+		console.log('error : ' + e);
 		return -1;
 	}
 }
@@ -47,7 +66,8 @@ export const register_ = async (formInput: RegisterFormInput) => {
 		else if (error.request){
 			return "error while sending request";
 		}
-		return "internal error";
+		console.log(error);
+		return -1;
 	}
 }
 

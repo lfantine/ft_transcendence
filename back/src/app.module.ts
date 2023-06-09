@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import * as Joi from '@hapi/joi';
 import { AuthService } from './auth/auth.service';
+import { User42Module } from './user42/user42.module';
 
 @Module({
   imports: [AuthModule, DatabaseModule, ConfigModule.forRoot({
@@ -19,7 +20,7 @@ import { AuthService } from './auth/auth.service';
       JWT_SECRET: Joi.string().required(),
       JWT_EXPIRATION_TIME: Joi.string().required(),
     })
-  }), UserModule],
+  }), UserModule, User42Module],
   controllers: [AppController],
   providers: [AppService],
 })

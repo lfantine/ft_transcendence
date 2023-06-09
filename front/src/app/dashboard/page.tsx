@@ -20,23 +20,28 @@ const page: FC<pageProps> = ({}) => {
 	const { push } = useRouter();
 
 	useEffect(() => {
-		const localData = localStorage.getItem('log');
-		if (localData === 'no'){
-			push('/');
-			console.log('not allowed');
-			return ;
-		}
-		const userData = checkLogin();
-		userData.then(function(data: AuthResponse | undefined) {
-			if (data === undefined){
-				localStorage.setItem('log', 'no');
+
+		const check = async () => {
+			const localData = localStorage.getItem('log');
+			if (localData === 'no'){
 				push('/');
-				console.log('not allowed');
+				console.log('not allowed coz no');
+				return ;
 			}
-			else
-				localStorage.setItem('log', 'yes');
-		})
-	}, [])
+			const userData = checkLogin();
+			userData.then(function(data: AuthResponse | undefined) {
+				if (data === undefined){
+					localStorage.setItem('log', 'no');
+					push('/');
+					console.log('not allowed');
+				}
+				else
+					localStorage.setItem('log', 'yes');
+			})
+		};
+
+		check();
+	}, []);
 
 	const logoutMutation = useMutation(logout, {
 		onSuccess: () => {

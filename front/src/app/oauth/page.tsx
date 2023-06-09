@@ -5,22 +5,26 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './oauth.module.css';
 import url from 'url';
-
-export type oauthResponse = {
-	token: any;
-	code: any;
-};
-
-interface sendOauthData {
-	grant_type: string,
-	client_id: string,
-	client_secret: string,
-	code: string,
-	redirect_uri: string,
-}
+import { useMutation } from '@tanstack/react-query';
+import { AuthResponse, login42 } from '../(auth)/auth.api';
+import Api from '../api/api';
 
 export async function Oauth() {
 	const { push } = useRouter();
+	Api.init();
+
+	const login42Mutation = useMutation(login42, {
+		onSuccess: async (data) => {
+			if (data === undefined || data === -1){
+				console.log('error while login with 4 user');
+				push('');
+				return ;
+			}
+			console.log('You are now logged in !');
+			localStorage.setItem('log', 'yes');
+			push('/dashboard');
+		},
+	});
 
 	useEffect(() => {
 		const takeToken = async () => {
@@ -29,18 +33,25 @@ export async function Oauth() {
 	
 			if (code){
 				const axiosI: AxiosInstance = axios.create({
-					baseURL: 'https://api.intra.42.fr/oauth/token',
+					baseURL: '',
 				});
-				console.log('code = ' + code);
 				try {
-					const reponse = await axiosI.post<oauthResponse>('', {
-						grant_type: 'authorization_code',
-						client_id: 'u-s4t2ud-25e6ea53637b7902c95484f73335e7c73358babe3f76497cf11e62f52efae667',
-						client_secret: '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',
-						code: code,
-						redirect_uri: 'http://localhost:3000/oauth',
-					});
-					console.log(reponse.data);
+					// login42Mutation.mutate({token: reponse.data.access_token, refresh_token: reponse.data.refresh_token});
+					console.log('attente de reponse');
+					const rep = await axiosI.post<AuthResponse | number>('http://localhost:4000/auth/42login', {code: code}, { withCredentials: true,});
+					console.log('reponse recu !');
+					console.log(rep.data);
+					if (rep.data !== -1 && rep.data !== undefined)
+					{
+						console.log('You are now logged in !');
+						localStorage.setItem('log', 'yes');
+						push('/dashboard');
+					}
+					else{
+						console.log('error');
+						push('');
+					}
+					return ;
 				} catch (e) {
 					console.log('error');
 					push('');
@@ -53,7 +64,7 @@ export async function Oauth() {
 		};
 
 		takeToken();
-	}, [])
+	}, []);
 
   return (
     <main>

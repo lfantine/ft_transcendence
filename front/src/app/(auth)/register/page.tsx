@@ -35,8 +35,39 @@ const page: FC<pageProps> = ({}) => {
 	const { push } = useRouter();
 	const { register, handleSubmit } = useForm<rFormInterface>();
 
+	const registerMutation = useMutation(register_, {
+		onSuccess: async (data) => {
+			console.log('data : ' + data);
+			if (data === -1)
+			{
+				console.log('internal error !');
+				return ;
+			}
+			else if (data === 1)
+			{
+				console.log('Email already taken !');
+				return ;
+			}
+			else if (data === 2)
+			{
+				return console.log('To confirm password please enter it two tiomes the same password !');
+			}
+			console.log('you are now registered !');
+			push('/login');
+		},
+		onError: (error) => {
+			console.log('Internal error !!');
+		}
+	});
+
 	const onSubmit: SubmitHandler<rFormInterface> = data => {
-		console.log(data);
+		const validform = valideForm.validate(data);
+		if (validform.error){
+			console.log('error : ' + valideForm.error);
+		}
+		else{
+			registerMutation.mutate(data);
+		}
 	}
 
 	return (

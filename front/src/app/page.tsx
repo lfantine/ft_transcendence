@@ -21,6 +21,24 @@ export default function Home() {
 
   const { push } = useRouter();
 
+  useEffect(() => {
+		const localData = localStorage.getItem('log');
+		if (localData === 'no'){
+			return ;
+		}
+		const userData = checkLogin();
+		userData.then(function(data: AuthResponse | undefined) {
+			if (data === undefined){
+				localStorage.setItem('log', 'no');
+			}
+			else
+			{
+				localStorage.setItem('log', 'yes');
+				push('/dashboard');
+			}
+		})
+	}, []);
+
   return (
     <main>
       <NavbarA navActive={true} testing={true}/>

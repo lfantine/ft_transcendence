@@ -30,19 +30,48 @@ const page: FC<loginProps> = ({}) => {
 	const { push } = useRouter();
 	const { register, handleSubmit } = useForm<FormInterface>();
 
-	const onSubmit: SubmitHandler<FormInterface> = data => {
-		console.log(data);
-	}
-
 	const handleOauth = () => {
 		push('https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-25e6ea53637b7902c95484f73335e7c73358babe3f76497cf11e62f52efae667&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Foauth&response_type=code');
+	}
+
+	const loginMutation = useMutation(login, {
+		onSuccess: async (data) => {
+			if (data === -1){
+				console.log('Internal error !');
+				return ;
+			}
+			else if (data === 1){
+				console.log('bad email !');
+				return ;
+			}
+			else if (data === 2){
+				console.log('bad password !');
+				return ;
+			}
+			console.log('You are now logged in !');
+			localStorage.setItem('log', 'yes');
+			push('/dashboard');
+		},
+		onError: async () => {
+			console.log('Internal error !');
+		}
+	});
+
+	const handleSub: SubmitHandler<FormInterface> = (data) => {
+		const validform = valideForm.validate(data);
+		if (validform.error){
+			console.log('error : ' + valideForm.error);
+		}
+		else{
+			loginMutation.mutate(data);
+		}
 	}
 
 	return (
 	<main>
 		<div className={styles.title}>login with form</div>
 			<div className={styles.form}>
-				<form onSubmit={handleSubmit(onSubmit)}>
+				<form onSubmit={handleSubmit(handleSub)}>
 					<label className={styles.inp}>Enter your mail : <input type='mail' placeholder='username@gmail.com' {...register("mail")} className={styles.input}></input></label>
 					<label className={styles.inp}>Enter your password : <input type='password' placeholder='*****' {...register("password")} className={styles.input}></input></label>
 					<input type='submit' value="login" className={styles.sub} readOnly></input>

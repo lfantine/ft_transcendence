@@ -9,6 +9,7 @@ import { checkLogin } from '@/app/(utils)/isLogin';
 import { AuthResponse } from './auth.api';
 import { useEffect, useState } from 'react';
 import { relative } from 'path';
+import Api from '../api/api';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,6 +26,26 @@ export default function AuthLayout({
 
 	const { push } = useRouter();
 	const [childError, setchildError] = useState("child");
+
+	Api.init();
+
+	useEffect(() => {
+		const localData = localStorage.getItem('log');
+		if (localData === 'no'){
+			return ;
+		}
+		const userData = checkLogin();
+		userData.then(function(data: AuthResponse | undefined) {
+			if (data === undefined){
+				localStorage.setItem('log', 'no');
+			}
+			else
+			{
+				localStorage.setItem('log', 'yes');
+				push('/dashboard');
+			}
+		})
+	}, []);
 
   return (
 	<main>

@@ -2,7 +2,7 @@ import { boolean } from "joi";
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-class User {
+class User42 {
 	@PrimaryGeneratedColumn("uuid")
 	id: string;
 
@@ -13,10 +13,13 @@ class User {
 	username: string;
 
 	@Column()
-	password: string;
+	token: string;
+
+	@Column()
+	refresh_token: string;
 
 	@Column()
 	level: number;
 }
 
-export default User;
+export default User42;
