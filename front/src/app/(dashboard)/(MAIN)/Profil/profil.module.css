@@ -121,6 +121,7 @@
 .desc {
 	max-height: 70px;
 	height: fit-content;
+	word-wrap: break-word;
 }
 
 .catValue {

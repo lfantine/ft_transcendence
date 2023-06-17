@@ -75,4 +75,24 @@ export class DashboardService {
 			return {mess: 'username error', err: -1};
 		}
 	}
+
+	async postDesc(newDesc: string, id: string, is42: boolean) {
+		try {
+			let user;
+			if (is42 === true) {
+				user = await this.user42Service.findById(id);
+				user.desc = newDesc;
+				await this.user42Service.updateUser42(user);
+			}
+			else {
+				user = await this.userService.findById(id);
+				user.desc = newDesc;
+				await this.userService.updateUser(user);
+			}
+			return {mess: 'desc upload', err: 0};
+		} catch (e) {
+			console.log('ERROROROR');
+			return {mess: 'username error', err: -1};
+		}
+	}
 }

@@ -87,6 +87,9 @@ const page: FC<pageProps> = ({}) => {
 			if (data.err === -2){
 				console.log('username already taken :(');
 			}
+			else if (data.err === -1) {
+				console.log('error happened :(');
+			}
 			else {
 				await sleep(500);
 				getInfo();
@@ -106,10 +109,28 @@ const page: FC<pageProps> = ({}) => {
 		const val = document.getElementById('dcChangeVal');
 		if (input?.classList.contains(style.hide)){
 			// met en mode edit
+			if (input instanceof HTMLTextAreaElement)
+				input.value = desc;
 			input?.classList.remove(style.hide);
 			val?.classList.add(style.hide);
 			seteditDctxt('confirm');
 			return ;
+		}
+		if (input instanceof HTMLTextAreaElement && input.value.trim().length > 0 && input.value.trim() !== desc) {
+			const newDesc = input.value.trim();
+			const { data } = await axios.post('http://localhost:4000/dashboard/desc', {'desc': newDesc}, { withCredentials: true});
+			console.log(data);
+			if (data.err === -1){
+				console.log('error happened :(');
+			}
+			else {
+				await sleep(500);
+				getInfo();
+			}
+			input.value = '';
+		}
+		else if (input instanceof HTMLTextAreaElement) {
+			input.value = '';
 		}
 		input?.classList.add(style.hide);
 		val?.classList.remove(style.hide);
@@ -119,7 +140,6 @@ const page: FC<pageProps> = ({}) => {
 	async function getInfo() {
 		try {
 			const res = await axiosI.get('/info', {withCredentials: true});
-			console.log(res.data);
 			const binImg = res.data.pic;
 			if (binImg.data.length > 0)
 			{
@@ -162,7 +182,7 @@ const page: FC<pageProps> = ({}) => {
 					<div className={style.info}>
 						<div className={style.oneInfo}><div className={style.catName}>Username :</div><input type='text' id='unChangeInput' className={style.hide} placeholder={`${username}`} maxLength={25}></input><div className={style.catValue} id='unChangeVal'>{username}</div><input className={style.buttonEdit} type='button' value={`${editUntxt}`} onClick={handleUnedit}></input></div>
 						<div className={style.oneInfo}><div className={style.catName}>Email :</div><div className={style.catValue}>{mail}</div></div>
-						<div className={style.oneInfoDesc}><div className={style.catName}>Description :</div><div className={style.desc} id='dcChangeVal'>{desc}</div><textarea rows={3} placeholder={`${desc}`} id='dcChangeInput' className={style.hide}></textarea><input className={style.buttonEdit} type='button' value={`${editDctxt}`} onClick={handleDcedit}></input></div>
+						<div className={style.oneInfoDesc}><div className={style.catName}>Description :</div><div className={style.desc} id='dcChangeVal'>{desc}</div><textarea rows={3} placeholder={`${desc}`} id='dcChangeInput' className={style.hide} maxLength={120}></textarea><input className={style.buttonEdit} type='button' value={`${editDctxt}`} onClick={handleDcedit}></input></div>
 					</div>
 				</div>
 				<div className={style.levelbar}>

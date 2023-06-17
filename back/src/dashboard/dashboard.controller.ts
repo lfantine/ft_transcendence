@@ -51,4 +51,14 @@ export class DashboardController {
 		const messRet = await this.dashService.postUsername(newUsername, request.myData.id, request.myData.is42);
 		return response.send(messRet);
 	}
+
+	@Post('desc')
+	@UseGuards(isAuthGuard)
+	async postDesc(@Req() request: RequestPlus, @Res() response: Response) {
+		const newDesc = request.body.desc;
+		if (newDesc === null || newDesc === undefined)
+			return response.send('-1');
+		const messRet = await this.dashService.postDesc(newDesc, request.myData.id, request.myData.is42);
+		return response.send(messRet);
+	}
 }
