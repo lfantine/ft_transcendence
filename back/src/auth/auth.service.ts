@@ -25,13 +25,13 @@ export class AuthService {
 		private configService: ConfigService
 	) {}
 
-	async register({mail, password, username, level}:CreateUserDto) {
+	async register({mail, password, username, level, pic, MMR, desc}:CreateUserDto) {
 
 		// here could be the validate email step before reister 
 
 		try{
 			const hashedPassword = await bcrypt.hash(password, 12);
-			const user = await this.userService.createUser({mail, username, password: hashedPassword, level});
+			const user = await this.userService.createUser({mail, username, password: hashedPassword, level, pic, MMR, desc});
 			user.password = undefined;
 			return user;
 		} catch (e) {
@@ -39,6 +39,7 @@ export class AuthService {
 				// throw new HttpException('Email already taken !', HttpStatus.CONFLICT);
 				return '1';
 			}
+			return '2';
 		}
 		throw new HttpException('Something went wrong !', HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -49,9 +50,14 @@ export class AuthService {
 		return cookie;
 	}
 
-	async getCookieJwtToken(user: User | User42)
+	async getCookieJwtToken(user: any)
 	{
-		const payload: TokenPayload = {user};
+		let payload: TokenPayload;
+		if (user.is42)
+			payload = {id: user.id, mail: user.mail, username: user.username, is42: user.is42};
+		else
+			payload = {id: user.id, mail: user.mail, username: user.username, is42: false};
+		console.log(payload);
 		const token = this.jwtService.sign(payload);
 		return `Authentification=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME')};`;
 	}
@@ -93,12 +99,9 @@ export class AuthService {
 
 	async ValidateIsLog(@Req() request: Request){
 		try {
-            const { user } = this.jwtService.verify(request?.cookies?.Authentification, this.configService.get('JWT_SECRET'));
+            const user = this.jwtService.verify(request?.cookies?.Authentification, this.configService.get('JWT_SECRET'));
 			if (user.password)
 				user.password = undefined;
-			// console.log('-----------------');
-			// console.log(user);
-			// console.log('-----------------');
 			return user;
         } catch (error) {
 			return undefined;
@@ -131,7 +134,8 @@ export class AuthService {
 			} catch ( e ) {
 				console.log('user not found go creating one');
 			}
-			const newUser = await this.user42Service.createUser({token, refresh_token, mail: email, username: login, level: 0});
+			const ImgData: Buffer = Buffer.alloc(0);
+			const newUser = await this.user42Service.createUser({token, refresh_token, mail: email, is42: true ,username: login, level: 0, MMR: 0, pic: ImgData, desc: 'new user'});
 			return newUser;
 		} catch (error) {
 			console.log('an error occure during user42 creation');

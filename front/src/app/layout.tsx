@@ -1,9 +1,5 @@
-import NavbarA from './(component)/navbar_auth/navbar_A';
 import './globals.css';
-import { Inter } from 'next/font/google';
 import QueryProvider from './(component)/queryProvider';
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
   title: 'Create Next App',

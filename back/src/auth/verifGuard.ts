@@ -3,6 +3,7 @@ import { AuthService } from "./auth.service";
 import { Request, Response } from "express";
 import User from "src/user/User.entity";
 import User42 from "src/user42/User42.entity";
+import RequestLog from "./interface/RequestLog";
 
 @Injectable()
 export class VerifGuard implements CanActivate {
@@ -16,8 +17,11 @@ export class VerifGuard implements CanActivate {
 		//   console.log('- - - - - - -');
 		//   console.log(request.cookies);
 		//   console.log('- - - - - - -');
-		const user = await this.authService.ValidateIsLog(request);
-		request.user = user;
+		const data = await this.authService.ValidateIsLog(request);
+		request.id = data.id;
+		request.username = data.username;
+		request.mail = data.mail;
+		request.is42 = data.is42;
 		return true;
 	}
 }

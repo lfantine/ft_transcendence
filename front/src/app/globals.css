@@ -1,16 +1,16 @@
-body {
-	color: white;
-	margin: 0;
-	width: 100%;
+html, body {
 	height: 100%;
-	background-image: url("../../public/Japan-Background-002-HQ.jpg");
-	background-repeat: no-repeat, no-repeat, repeat-x;
-	background-position: center -0%;
-	background-size: auto;
+	width: 100%;
+	margin: 0;
+	padding: 0;
 }
 
-@media screen and (min-width: 2400px) {
-	body {
-		background-size: cover;
-	}
+body {
+	height: 100%;
+	width: 100%;
+	color: white;
+	background-image: url("../../public/Japan-Background-002-HQ.jpg");
+	background-repeat: no-repeat;
+	background-position: center -0%;
+	background-size: cover;
 }

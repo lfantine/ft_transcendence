@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import * as Joi from '@hapi/joi';
 import { AuthService } from './auth/auth.service';
 import { User42Module } from './user42/user42.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [AuthModule, DatabaseModule, ConfigModule.forRoot({
@@ -20,7 +21,7 @@ import { User42Module } from './user42/user42.module';
       JWT_SECRET: Joi.string().required(),
       JWT_EXPIRATION_TIME: Joi.string().required(),
     })
-  }), UserModule, User42Module],
+  }), UserModule, User42Module, DashboardModule],
   controllers: [AppController],
   providers: [AppService],
 })

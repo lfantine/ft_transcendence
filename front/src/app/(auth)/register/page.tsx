@@ -7,6 +7,7 @@ import * as Joi from 'joi';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { RegisterFormInput, register_ } from '../auth.api';
+import { AiTwotoneMail, AiTwotoneLock, AiOutlineUser } from "react-icons/ai";
 
 interface pageProps {}
 
@@ -45,12 +46,12 @@ const page: FC<pageProps> = ({}) => {
 			}
 			else if (data === 1)
 			{
-				console.log('Email already taken !');
+				console.log('Email or Password already taken !');
 				return ;
 			}
 			else if (data === 2)
 			{
-				return console.log('To confirm password please enter it two tiomes the same password !');
+				return console.log('To confirm password please enter it two times the same password !');
 			}
 			console.log('you are now registered !');
 			push('/login');
@@ -75,10 +76,10 @@ const page: FC<pageProps> = ({}) => {
 		<div className={styles.title}>Register</div>
 		<div className={styles.form}>
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<label className={styles.inp}>Enter your mail : <input type='mail' placeholder='username@gmail.com' {...register("mail")} className={styles.input}></input></label>
-				<label className={styles.inp}>Enter your username : <input type='text' placeholder='azerty' {...register("username")} className={styles.input}></input></label>
-				<label className={styles.inp}>Enter your password : <input type='password' placeholder='*****' {...register("password")} className={styles.input}></input></label>
-				<label className={styles.inp}>Confirm your password : <input type='password' placeholder='*****' {...register("confirmPassword")} className={styles.input}></input></label>
+				<label className={styles.inp}><input type='mail' placeholder='Email' {...register("mail")} className={styles.input}></input><AiTwotoneMail /></label>
+				<label className={styles.inp}><input type='text' placeholder='Username' {...register("username")} className={styles.input}></input><AiOutlineUser /></label>
+				<label className={styles.inp}><input type='password' placeholder='Password' {...register("password")} className={styles.input}></input><AiTwotoneLock /></label>
+				<label className={styles.inp}><input type='password' placeholder='Confirm Password' {...register("confirmPassword")} className={styles.input}></input><AiTwotoneLock /></label>
 				<input type='submit' value="register" className={styles.sub} readOnly></input>
 			</form>
 		</div>

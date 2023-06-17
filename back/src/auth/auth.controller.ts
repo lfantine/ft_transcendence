@@ -1,13 +1,13 @@
 import { Body, Controller, HttpCode, Post, Get, UseGuards, Req, Res, HttpException, HttpStatus} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
-import { LocalAuthGuard } from './localAuthGuard';
-import { request } from 'http';
 import RequestUser from './interface/RequestUser';
 import { MyAuthGuard } from './myAuthGuard';
 import { VerifGuard } from './verifGuard';
 import Request42User from './interface/Request42User';
 import axios, { AxiosInstance } from 'axios';
+import { ConfigService } from '@nestjs/config';
+import RequestLog from './interface/RequestLog';
 
 export type oauthResponse = {
 	access_token: any;
@@ -18,13 +18,16 @@ export type oauthResponse = {
 @Controller('auth')
 export class AuthController {
 
-	constructor(private readonly authService: AuthService) {}
+	constructor(private readonly authService: AuthService, private configService: ConfigService) {}
 
 	@Post('register')
 	async register(@Body('mail') mail: string, @Body('password') password: string, @Body('username') username: string, @Body('confirmPassword') confirmPassword: string, @Res() response: Response){
 		if (password != confirmPassword)
 		{throw new HttpException('Please enter 2 times the same password', HttpStatus.BAD_REQUEST);}
-		const data = await this.authService.register({mail, password, username, level: 0});
+		const ImgData: Buffer = Buffer.alloc(0);
+		const data = await this.authService.register({mail, password, username, level: 0, pic: ImgData, desc: 'A new player', MMR: 0});
+		if (data !== '1' && data !== '2')
+			return response.send(data.username);
 		return response.send(data);
 	}
 
@@ -36,15 +39,14 @@ export class AuthController {
 			});
 			const reponse = await axiosI.post<oauthResponse>('https://api.intra.42.fr/oauth/token', {
 				grant_type: 'authorization_code',
-				client_id: 'u-s4t2ud-25e6ea53637b7902c95484f73335e7c73358babe3f76497cf11e62f52efae667',
-				client_secret: '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',
+				client_id: this.configService.get('42_CLIENT_ID'),
+				client_secret: this.configService.get('42_CLIENT_SECRET'),
 				code: code,
 				redirect_uri: 'http://localhost:3000/oauth',
 			});
 			const data = await this.authService.login42(reponse.data.access_token, reponse.data.refresh_token);
 			const cookie = await this.authService.getCookieJwtToken(data);
-			// console.log(cookie);
-			request.body = data;
+			request.body = data.username;
 			request.res.setHeader('Set-Cookie', cookie);
 			return response.send(request.body);
 		} catch (e) {
@@ -67,13 +69,13 @@ export class AuthController {
 	@HttpCode(200)
 	@Get('isLogin')
 	@UseGuards(VerifGuard)
-	async isLogin(@Req() request: RequestUser | Request42User, @Res() response: Response){
-		if (request.user === undefined){
+	async isLogin(@Req() request: RequestLog, @Res() response: Response){
+		if (request.id === undefined){
 			console.log('User is not okay for isLogin :');
 			console.log(request.user);
 			return response.send({id: undefined});
 		}
-		return response.send(request.user);
+		return response.send({id: request.id});
 	}
 
 	@HttpCode(200)

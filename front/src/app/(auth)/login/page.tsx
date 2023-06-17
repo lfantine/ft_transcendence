@@ -9,6 +9,7 @@ import * as Joi from 'joi';
 import { useRouter } from 'next/navigation';
 import { checkLogin } from '@/app/(utils)/isLogin';
 import { error } from 'console';
+import { AiTwotoneMail, AiTwotoneLock } from "react-icons/ai";
 
 
 interface loginProps {}
@@ -69,12 +70,12 @@ const page: FC<loginProps> = ({}) => {
 
 	return (
 	<main>
-		<div className={styles.title}>login with form</div>
+		<div className={styles.title}>Login</div>
 			<div className={styles.form}>
 				<form onSubmit={handleSubmit(handleSub)}>
-					<label className={styles.inp}>Enter your mail : <input type='mail' placeholder='username@gmail.com' {...register("mail")} className={styles.input}></input></label>
-					<label className={styles.inp}>Enter your password : <input type='password' placeholder='*****' {...register("password")} className={styles.input}></input></label>
-					<input type='submit' value="login" className={styles.sub} readOnly></input>
+					<label className={styles.inp}><input type='mail' placeholder='Email' {...register("mail")} className={styles.input}></input><AiTwotoneMail /></label>
+					<label className={styles.inp}><input type='password' placeholder='Password' {...register("password")} className={styles.input}></input><AiTwotoneLock /></label>
+					<input type='submit' value="submit" className={styles.sub} readOnly></input>
 				</form>
 			</div>
 		<div className={styles.title}>login with other</div>

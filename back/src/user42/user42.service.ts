@@ -32,6 +32,14 @@ export class User42Service {
 		throw new HttpException('User with this mail does not exist !', HttpStatus.NOT_FOUND);
 	}
 
+	async findByUsername(username: string): Promise<User42>{
+		const user = await this.user42Repository.findOneBy({username});
+		if (user) {
+			return user;
+		}
+		throw new HttpException('User with this id does not exist !', HttpStatus.NOT_FOUND);
+	}
+
 	async updateUser42(newUser: Partial<User42>): Promise<User42>{
 		try {
 			const { mail } = newUser;

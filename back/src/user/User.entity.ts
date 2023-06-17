@@ -9,14 +9,23 @@ class User {
 	@Column("text", {unique: true})
 	mail: string;
 
-	@Column("text")
+	@Column("text", {unique: true})
 	username: string;
 
 	@Column()
 	password: string;
 
+	@Column({type: 'bytea'})
+	pic: Buffer;
+
+	@Column()
+	desc: string;
+
 	@Column()
 	level: number;
+
+	@Column()
+	MMR: number;
 }
 
 export default User;

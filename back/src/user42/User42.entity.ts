@@ -9,8 +9,11 @@ class User42 {
 	@Column("text", {unique: true})
 	mail: string;
 
-	@Column("text")
+	@Column("text", {unique: true})
 	username: string;
+
+	@Column()
+	is42: boolean;
 
 	@Column()
 	token: string;
@@ -18,8 +21,17 @@ class User42 {
 	@Column()
 	refresh_token: string;
 
+	@Column({type: 'bytea'})
+	pic: Buffer;
+
+	@Column()
+	desc: string;
+
 	@Column()
 	level: number;
+
+	@Column()
+	MMR: number;
 }
 
 export default User42;

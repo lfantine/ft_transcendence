@@ -1,10 +1,12 @@
 @import url('https://fonts.googleapis.com/css?family=Quicksand&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Monomaniac+One&family=Neucha&display=swap');
 
 .title {
 	font-size: 50px;
 	font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 	margin: auto;
+	margin-top: 20px;
 	width: 100%;
 	text-align: center;
 
@@ -48,35 +50,45 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: baseline;
-	gap: 30px;
+	gap: 50px;
 	margin-top: 30px;
 
 	font-size: 30px;
 }
 
 .inp {
-	width: 100%;
+	width: 70%;
 	height: fit-content;
 	text-align: center;
+	margin: 0 auto;
+	padding-bottom: 2px;
 
 	display: flex;
 	flex-direction: row;
-	justify-content: space-evenly;
+	justify-content: space-between;
+	border-bottom: 3px solid rgb(255, 255, 255);
 }
 
-.input {
-	width: 200px;
+.input, .input:focus, .input:active {
+	width: 450px;
 	font-size: 20px;
+	border: 0;
+	background-color: rgba(245, 222, 179, 0);
+	outline: none;
 }
 
 .sub {
-	width: 100px;
+	width: 250px;
 	margin: auto;
-	height: 30px;
-	font-size: 20px;
-	border-radius: 20px;
+	height: 50px;
+	font-size: 30px;
+	font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	border-radius: 3px;
 	border: 0;
-	border-bottom: 3px solid rgb(255, 112, 112);
+	border-bottom: 1px solid rgb(0, 0, 0);
+	border-right: 1px solid rgb(0, 0, 0);
+	background-color: rgb(207, 66, 0);
+	color: white;
 	transition: 0.25s;
 }
 

@@ -13,7 +13,6 @@ const NavbarA: React.FC<INavbar> = (Content) => {
 
 const [activeBand, setActiveBand] = useState(true);
 const [activeMusic, setActiveMusic] = useState(false);
-// const [music, setmusic] = useState(new Audio('vinil_music.mp3'));
 
 const handleNav = async (e: any) => {
 	e.preventDefault();
@@ -61,8 +60,8 @@ const handleMusic = async (e: any) => {
 				<img src='lanterne.png' className={styles.lant} onClick={handleNav}></img>
 				<div className={styles.cont_band}>
 					<div className={styles.band} id='nav'>
-						<div className={styles.link}><Link href="" className={styles.L}>HOME</Link></div>
-						<div className={styles.link}><Link href="/login" className={styles.L}>CONNECTION</Link></div>
+						<div className={styles.link}><Link href="" className={styles.L} as="">HOME</Link></div>
+						<div className={styles.link}><Link href="/login" className={styles.L} as="login">CONNECTION</Link></div>
 					</div>
 				</div>
 				<div className={styles.music} onClick={handleMusic}><img src='vinil.png' className={styles.vinil} id='music'></img><audio src='vinil_music.mp3' id='odio'></audio></div>

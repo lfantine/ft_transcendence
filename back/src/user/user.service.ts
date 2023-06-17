@@ -24,10 +24,30 @@ export class UserService {
 		throw new HttpException('User with this id does not exist !', HttpStatus.NOT_FOUND);
 	}
 
+	async findByUsername(username: string): Promise<User>{
+		const user = await this.userRepository.findOneBy({username});
+		if (user) {
+			return user;
+		}
+		throw new HttpException('User with this id does not exist !', HttpStatus.NOT_FOUND);
+	}
+
 	async createUser(userData: CreateUserDto) {
 		const newUser = await this.userRepository.create(userData);
 		await this.userRepository.save(newUser);
 		return newUser;
+	}
+
+	async updateUser(newUser: Partial<User>): Promise<User>{
+		try {
+			const { mail } = newUser;
+			const user = await this.userRepository.findOneBy({mail});
+			const updateUser = Object.assign(user, newUser);
+			this.userRepository.save(updateUser);
+			return updateUser;
+		} catch (e) {
+			return undefined;
+		}
 	}
 
 	async removeUser(id: number): Promise<void>{
